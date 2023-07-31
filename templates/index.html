@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Explore Audio Dataset</title>
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom styles -->
+    <style>
+        .center-content {
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            width: 80%;
+            margin: 0 auto;
+        }
+        .audio-card {
+            width: 80%;
+            margin-top: 50px;
+            padding: 20px;
+        }
+        #spectrogramImage {
+            width: 100%;
+            margin-top: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        .button-list {
+          display: flex;
+          flex-wrap: wrap;
+        }
+
+        .button-item {
+          display: inline-block;
+          padding: 8px 16px;
+          margin: 4px;
+          background-color: #007bff;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          text-decoration: none;
+          color: #fff;
+        }
+
+        .button-item:hover {
+          background-color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container center-content">
+        <div class="card audio-card">
+            <div class="card-body">
+                <h1 class="card-title mb-4 text-center">Data Sample</h1>
+                <form id="audioForm" class="mb-3">
+                    <div class="form-group">
+                        <label for="audio_id" class="h5">Enter Audio ID:</label>
+                        <input type="text" id="audio_id" name="audio_id" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Play</button>
+                </form>
+
+                <div id="audioPlayerDiv" class="d-none text-center">
+                    <audio id="audioPlayer" controls class="w-100">
+                        <!-- Placeholder audio source -->
+                        <source id="audioSource" src="" type="audio/wav">
+                    </audio>
+                </div>
+                
+                <div id="button-container" class="button-list">
+                </div>
+                <img id="spectrogramImage" src="" class="hidden" alt="Spectrogram">
+
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        document.getElementById("audioForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            let audio_id = document.getElementById("audio_id").value;
+            fetch("/", {
+                method: "POST",
+                body: new URLSearchParams({
+                    "audio_id": audio_id
+                }),
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Set the audio source to the retrieved file
+                document.getElementById("audioSource").src = `static/tmp.wav?audio_id=${data.audio_id}`;
+                // Reload the audio element to update the source
+                document.getElementById("audioPlayer").load();
+                // Show the audio player after loading the audio
+                document.getElementById("audioPlayerDiv").classList.remove("d-none");
+
+
+                // Set labels
+                var buttonContainer = document.getElementById("button-container");
+                while (buttonContainer.firstChild) {
+                  buttonContainer.removeChild(buttonContainer.firstChild);
+                }
+                data.labels.forEach(function(label) {
+                  var button = document.createElement("button");
+                  button.className = "button-item";
+                  button.href = "#";
+                  button.textContent = label;
+                  buttonContainer.appendChild(button);
+                });
+
+
+                // Set spectrogram
+                var randomParam = "?timestamp=" + Date.now();
+                // Set the spectrogram image source to the retrieved file
+                document.getElementById("spectrogramImage").src = `static/spectrogram.jpg` + randomParam;
+                // Show the spectrogram image after loading the image
+                document.getElementById("spectrogramImage").classList.remove("hidden");
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        });
+    </script>
+</body>
+</html>
+
