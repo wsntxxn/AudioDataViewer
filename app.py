@@ -9,17 +9,16 @@ import pandas as pd
 import h5py
 import matplotlib.pyplot as plt
 
-import data_reader
+from data_reader import READER_REGISTRY
 
 app = Flask(__name__)
 
 Path("static").mkdir(exist_ok=True)
 
-name_to_reader = {
-    "AudioSet": data_reader.AudioSetReader
-}
 
-reader = name_to_reader["AudioSet"]()
+datasets = list(READER_REGISTRY.keys())
+
+reader = None
 
 
 def plot_spectrogram(waveform, sr):
@@ -36,6 +35,7 @@ def plot_spectrogram(waveform, sr):
     duration = len(waveform) / sr
     ticks = [int(x) for x in np.arange(0, log_melspec.shape[1] * 6 / 5, int(log_melspec.shape[1] / 5))]
     labels = np.arange(0, duration * 6 / 5, duration / 5)
+    labels = ["{:.2f}".format(x) for x in labels]
     com_len = min(len(ticks), len(labels))
     plt.xticks(ticks[:com_len], labels[:com_len])
     plt.xlabel("Seconds")
@@ -49,15 +49,28 @@ def get_audio_by_id(audio_id):
     return waveform, sr, labels
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/show", methods=["POST"])
 def index():
-    if request.method == "POST":
+    if "audio_id" in request.form:
         audio_id = request.form["audio_id"]
         waveform, sample_rate, labels = get_audio_by_id(audio_id)
         file_path = "static/tmp.wav"
         sf.write(file_path, waveform, sample_rate)
         return jsonify({"audio_id": audio_id, "labels": labels})
-    return render_template("index.html")
+    elif "dataset" in request.form:
+        global reader
+        dataset = request.form["dataset"]
+        reader = READER_REGISTRY[dataset]()
+        return render_template("index.html")
+
+
+@app.route("/", methods=["GET", "POST"])
+def select():
+    if request.method == "POST":
+        selected_dataset = request.form.get("dataset")
+        # 在这里处理用户选择的数据集，您可以根据需要执行其他操作
+        return jsonify({"selected_dataset": selected_dataset})
+    return render_template("select.html", datasets=datasets)
 
 
 if __name__ == "__main__":

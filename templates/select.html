@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dataset Selection</title>
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom styles -->
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 50px;
+        }
+        .container {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border: 1px solid #ced4da;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .form-check {
+            padding: 5px;
+            border: 1px;
+            border-radius: 5px;
+        }
+        .form-check label {
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: #d5e8d4;
+            transition: background-color 0.3s ease;
+            color: #333;
+        }
+        .form-check label:hover {
+            background-color: #e1e1e1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Select a Dataset</h1>
+        <form id="datasetForm" method="post" action="/show">
+            {% for dataset in datasets %}
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="dataset" id="dataset{{ loop.index }}" value="{{ dataset }}" required>
+                    <label class="form-check-label" for="dataset{{ loop.index }}">{{ dataset }}</label>
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary mt-3 btn-block">Submit</button>
+        </form>
+    </div>
+
+    <!-- Add Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
+

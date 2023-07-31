@@ -44,6 +44,16 @@
         .button-item:hover {
           background-color: #0056b3;
         }
+        .btn-play {
+            background-color: #28a745; /* 设置按钮的背景颜色为Bootstrap的success颜色 */
+            color: #fff; /* 设置按钮文字颜色为白色 */
+            width: 20%; /* 设置按钮宽度为外面容器的1/5 */
+            margin: 0 auto; /* 居中展示按钮 */
+            margin-top: 20px; /* 添加一定的顶部外边距 */
+        }
+        .btn-play:hover {
+            background-color: #218838; /* 设置鼠标悬停时的背景颜色为稍深的success颜色 */
+        } 
 
     </style>
 </head>
@@ -57,7 +67,7 @@
                         <label for="audio_id" class="h5">Enter Audio ID:</label>
                         <input type="text" id="audio_id" name="audio_id" class="form-control" required>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block">Play</button>
+                    <button type="submit" class="btn btn-primary mt-3 btn-block btn-play">Play</button>
                 </form>
 
                 <div id="audioPlayerDiv" class="d-none text-center">
@@ -85,7 +95,7 @@
         document.getElementById("audioForm").addEventListener("submit", function (event) {
             event.preventDefault();
             let audio_id = document.getElementById("audio_id").value;
-            fetch("/", {
+            fetch("/show", {
                 method: "POST",
                 body: new URLSearchParams({
                     "audio_id": audio_id
