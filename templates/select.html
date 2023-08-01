@@ -36,6 +36,16 @@
         .form-check label:hover {
             background-color: #e1e1e1;
         }
+        .btn-play {
+            background-color: #28a745; /* 设置按钮的背景颜色为Bootstrap的success颜色 */
+            color: #fff; /* 设置按钮文字颜色为白色 */
+            width: 20%; /* 设置按钮宽度为外面容器的1/5 */
+            margin: 0 auto; /* 居中展示按钮 */
+            margin-top: 20px; /* 添加一定的顶部外边距 */
+        }
+        .btn-play:hover {
+            background-color: #218838; /* 设置鼠标悬停时的背景颜色为稍深的success颜色 */
+        } 
     </style>
 </head>
 <body>
@@ -48,7 +58,7 @@
                     <label class="form-check-label" for="dataset{{ loop.index }}">{{ dataset }}</label>
                 </div>
             {% endfor %}
-            <button type="submit" class="btn btn-primary mt-3 btn-block">Submit</button>
+            <button type="submit" class="btn btn-primary mt-3 btn-block btn-play">Enter</button>
         </form>
     </div>
 

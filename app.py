@@ -36,8 +36,7 @@ def plot_spectrogram(waveform, sr):
     ticks = [int(x) for x in np.arange(0, log_melspec.shape[1] * 6 / 5, int(log_melspec.shape[1] / 5))]
     labels = np.arange(0, duration * 6 / 5, duration / 5)
     labels = ["{:.2f}".format(x) for x in labels]
-    com_len = min(len(ticks), len(labels))
-    plt.xticks(ticks[:com_len], labels[:com_len])
+    plt.xticks(ticks[:6], labels[:6])
     plt.xlabel("Seconds")
     plt.title("Log Mel-spectrogram")
     plt.savefig("static/spectrogram.jpg", bbox_inches="tight", dpi=100)
