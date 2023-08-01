@@ -65,10 +65,6 @@ def index():
 
 @app.route("/", methods=["GET", "POST"])
 def select():
-    if request.method == "POST":
-        selected_dataset = request.form.get("dataset")
-        # 在这里处理用户选择的数据集，您可以根据需要执行其他操作
-        return jsonify({"selected_dataset": selected_dataset})
     return render_template("select.html", datasets=datasets)
 
 
